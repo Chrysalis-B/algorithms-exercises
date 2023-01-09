@@ -9,11 +9,17 @@
  
  */
 
-function nestedAdd(array) {
-  // write code here
+function nestedAdd(arr) {
+  let [first, ...rest] = arr;
+  if (typeof first === 'number') {
+    return rest.length ? first + nestedAdd(rest) : first;
+  }
+  else {
+    return rest.length ? nestedAdd(first) + nestedAdd(rest) : nestedAdd(first);
+  }
 }
 
-test.skip("nested arrays addition", () => {
+test("nested arrays addition", () => {
   expect(nestedAdd([1, 2, 3])).toEqual(6);
   expect(nestedAdd([1, [2], 3])).toEqual(6);
   expect(nestedAdd([[[[[[[[[5]]]]]]]]])).toEqual(5);
