@@ -22,21 +22,87 @@
 */
 
 class Tree {
-  // code goes here
+  constructor() {
+    this.root = null;
+  }
+  add(value) {
+    if (!this.root) {
+      this.root = new Node(value);
+    }
+    else {
+      this.root.add(value);
+    }
+  }
+  toObject() {
+    return this.root;
+  }
 }
 
 class Node {
-  // code also goes here
+  constructor(value) {
+    this.left = null;
+    this.right = null;
+    this.value = value;
+    this.height = 1;
+  }
+  add(value) {
+    if (value < this.value) {
+      if (this.left) {
+        this.left.add(value);
+      }
+      else {
+        this.left = new Node(value);
+        this.height++;
+      }
+      if (!this.right || this.right.height < this.left.height) {
+        this.height = this.left.height + 1;
+      }
+    }
+    else {
+      if (this.right) {
+        this.right.add(value);
+      }
+      else {
+        this.right = new Node(value);
+        this.height++;
+      }
+      if (!this.left || this.left.height < this.right.height) {
+        this.height = this.right.height + 1;
+      }
+    }
+    this.balance();
+
+  }
+  balance() {
+    // ask is this node out of balance
+    // if out of balance do I need to single or double rotate
+    // if single, call rotate on self
+    // if double, call rotate on chilc then on self
+  }
+  rotateRR() {
+    // if right child is heavy
+    this.right.updateInNewLocation();
+    this.updateInNewLocation();
+  }
+  rotateLL() {
+    // if left child is heavy
+    this.left.updateInNewLocation();
+    this.updateInNewLocation();
+  }
+  updateInNewLocation() {
+    // calculate the new height
+  }
 }
 
 // unit tests
 // do not modify the below code
-describe.skip("AVL Tree", function () {
+describe("AVL Tree", function () {
   test("creates a correct tree", () => {
     const nums = [3, 7, 4, 6, 5, 1, 10, 2, 9, 8];
     const tree = new Tree();
     nums.map((num) => tree.add(num));
     const objs = tree.toObject();
+    console.log('🚀 ~ file: avl.test.js:87 ~ test ~ objs', objs);
 
     expect(objs.value).toEqual(4);
 
