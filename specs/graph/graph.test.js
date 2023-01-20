@@ -26,12 +26,30 @@
 const { getUser } = require("./jobs");
 
 const findMostCommonTitle = (myId, degreesOfSeparation) => {
-  // code goes here
+  let queue = [myId];
+  const jobTitles = {};
+  const processedIds = new Set();
+  for (let i = 0; i <= degreesOfSeparation; i++) {
+    let newQueue = [];
+    while (queue.length) {
+      const user = getUser(queue.shift());
+      for (let connection of user.connections) {
+        if (!processedIds.has(connection)) {
+          newQueue.push(connection);
+          processedIds.add(connection);
+        }
+      }
+      jobTitles[user.title] = jobTitles[user.title] ? jobTitles[user.title] + 1 : 1;
+    }
+    queue = newQueue
+  }
+  return Object.keys(jobTitles).reduce((a, b) => jobTitles[a] > jobTitles[b] ? a : b);
 };
+
 
 // unit tests
 // do not modify the below code
-test.skip("findMostCommonTitle", function () {
+describe("findMostCommonTitle", function () {
   // the getUser function and data comes from this CodePen: https://codepen.io/btholt/pen/NXJGwa?editors=0010
   test("user 30 with 2 degrees of separation", () => {
     expect(findMostCommonTitle(30, 2)).toBe("Librarian");
@@ -48,7 +66,7 @@ test.skip("findMostCommonTitle", function () {
   });
 });
 
-test.skip("extra credit", function () {
+describe("extra credit", function () {
   test("user 1 with 7 degrees of separation – this will traverse every user that's followed by someone else. five users are unfollowed", () => {
     expect(findMostCommonTitle(1, 7)).toBe("Geological Engineer");
   });
