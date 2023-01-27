@@ -39,7 +39,7 @@ const findMostCommonTitle = (myId, degreesOfSeparation) => {
           processedIds.add(connection);
         }
       }
-      jobTitles[user.title] = jobTitles[user.title] ? jobTitles[user.title] + 1 : 1;
+      jobTitles[user.title] = (jobTitles[user.title] || 0) + 1;
     }
     queue = newQueue
   }
